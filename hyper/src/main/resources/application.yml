@@ -1,0 +1,66 @@
+server:
+  port: 8099
+datasource:
+  url: 124.221.237.161:3306/hyper
+
+spring:
+  datasource:
+    jdbc-url: jdbc:mysql://${datasource.url}?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: mypassword
+
+# mybatis-plus 配置内容
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true # 虽然默认为 true ，但是还是显示去指定下。
+  global-config:
+    db-config:
+      #      id-type: auto # ID 主键自增
+      select-strategy: not_empty
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+#  mapper-locations: classpath*:mapper/*.xml
+#  type-aliases-package: com.simple.*.system.model.entity
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+logging:
+  level:
+    com.simple.hyper.system.mapper: debug
+
+aliyun:
+  oss:
+    # oss对外服务的访问域名
+    endpoint: oss-cn-nanjing.aliyuncs.com
+    # 访问身份验证中用到用户标识
+    accessKeyId: LTAI5tF2YN19PEMg2Stv63pW
+    # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
+    accessKeySecret: v6ydz9fedEgLimM7GuMH6E2eMNj2GT
+    # oss的存储空间
+    bucketName: since-hyper
+    # 上传文件大小(M)
+    maxSize: 50
+    urlPrefix: https://${aliyun.oss.bucketName}.${aliyun.oss.endpoint}/
+    # 上传文件夹路径前缀
+    dirPrefix: images/
+
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: hyper-token
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: true
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false

@@ -1,0 +1,46 @@
+package com.simple.hyper.system.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.simple.hyper.common.base.TreeModel;
+import com.simple.hyper.system.model.dto.UserDTO;
+import com.simple.hyper.system.model.entity.User;
+import com.simple.hyper.system.model.query.UserQuery;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+/**
+ * .
+ *
+ * @author SinceNovember
+ * @date 2022/12/16
+ */
+@Mapper
+public interface UserMapper extends BaseMapper<User> {
+
+    @Select("<script>" +
+            "select * from t_user where deleted = 0 " +
+            "<if test=\"nickname != null and nickname != ''\">" +
+            "and nickname like concat('%', #{nickname}, '%') " +
+            "</if>" +
+            "order by order_num desc" +
+            "</script>")
+    List<UserDTO> selectUserList(UserQuery userQuery);
+
+    @Select("<script>" +
+        "select * from t_user where deleted = 0 " +
+        "<if test=\"deptId != null \">" +
+        "and dept_id =#{deptId} " +
+        "</if>" +
+        "order by order_num desc" +
+        "</script>")
+    List<UserDTO> selectUserListByDeptId(@Param("deptId") Integer deptId);
+
+    @Select("<script>" +
+        "select id as value, nickname as title from t_user where deleted = 0 " +
+        "order by order_num desc" +
+        "</script>")
+    List<TreeModel> selectUserTreeModelList();
+}

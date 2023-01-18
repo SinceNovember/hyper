@@ -1,0 +1,81 @@
+package com.simple.hyper.handler;
+
+import com.simple.hyper.common.base.Response;
+import com.simple.hyper.common.consts.MsgConsts;
+import com.simple.hyper.common.ex.HyperException;
+import com.simple.hyper.common.utils.StringUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.servlet.ServletException;
+
+/**
+ * .
+ *
+ * @author SinceNovember
+ * @date 2022/12/13
+ */
+@Slf4j
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    /**
+     * 系统异常
+     */
+    @ExceptionHandler(Throwable.class)
+    public Response handleException(Throwable e) throws Throwable {
+        // 如果异常为ServletException, 直接抛出, 不做处理. 只处理业务异常返回系统错误
+        if (e instanceof ServletException) {
+            throw e;
+        } else if (e instanceof HttpMessageNotReadableException) {
+            return Response.fail(MsgConsts.PARAMS_ERROR_CODE, MsgConsts.PARAMS_ERROR_MSG);
+        } else {
+            // 打印堆栈信息
+            log.error("system error:", e);
+            return Response.fail(MsgConsts.SYSTEM_ERROR_CODE, MsgConsts.SYSTEM_ERROR_MSG);
+        }
+    }
+
+    /**
+     * 处理接口参数异常
+     */
+    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
+    public Response handleMethodArgumentNotValidException(Exception e) {
+        try {
+            String errorMsg;
+            if (e instanceof MethodArgumentNotValidException) {
+                errorMsg = ((MethodArgumentNotValidException) e).getBindingResult().getFieldError().getDefaultMessage();
+            } else {
+                errorMsg = ((BindException) e).getBindingResult().getFieldError().getDefaultMessage();
+            }
+
+            log.error("参数异常:{}", errorMsg);
+            return Response.fail(MsgConsts.PARAMS_ERROR_CODE, errorMsg);
+        } catch (Exception ex) {
+            log.error("system error:", e);
+            return Response.fail(MsgConsts.PARAMS_ERROR_CODE, MsgConsts.SYSTEM_ERROR_MSG);
+        }
+    }
+
+    /**
+     * 业务异常
+     */
+    @ExceptionHandler(HyperException.class)
+    public Response handleHyperException(HyperException e) {
+        if (e.getCode() != null) {
+            log.info("业务异常,code:{},message:{}", e.getCode(), e.getMessage());
+            return Response.fail(e.getCode(), e.getMessage());
+        }
+        if (StringUtils.isNotBlank(e.getMessage())) {
+            log.info("业务异常:{}", e.getMessage());
+            return Response.fail(e.getMessage());
+        } else {
+            log.error("system error:", e);
+            return Response.fail(MsgConsts.SYSTEM_ERROR_MSG);
+        }
+    }
+}
