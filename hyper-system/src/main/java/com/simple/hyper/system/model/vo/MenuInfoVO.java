@@ -21,6 +21,8 @@ public class MenuInfoVO {
 
     private Integer parentId;
 
+    private String parentTitle;
+
     private String component;
 
     private String name;

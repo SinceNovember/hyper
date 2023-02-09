@@ -2,6 +2,7 @@ package com.simple.hyper.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.pagehelper.PageSerializable;
+import com.simple.hyper.common.base.OptionModel;
 import com.simple.hyper.common.base.TreeModel;
 import com.simple.hyper.system.model.entity.Role;
 import com.simple.hyper.system.model.query.RoleQuery;
@@ -18,6 +19,12 @@ public interface IRoleService extends IService<Role> {
      * @return 分页角色VO
      */
     PageSerializable<RoleVO> pageRole(RoleQuery roleQuery);
+
+    /**
+     * 角色列表选择模型
+     *
+     */
+    List<OptionModel> listRoleOptionModel();
 
     /**
      * 角色列表树模型
@@ -40,6 +47,9 @@ public interface IRoleService extends IService<Role> {
      * @return 角色信息VO
      */
     RoleVO getRoleById(Integer id);
+
+
+
 
     /**
      * 删除角色

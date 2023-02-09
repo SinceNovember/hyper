@@ -38,10 +38,10 @@ public class UserQuery extends PageQuery {
 
     private Integer deptId;
 
+    private List<Integer> roleIds;
+
     private StatusType status;
 
     private Integer orderNum;
-
-    private List<Integer> ids;
 
 }

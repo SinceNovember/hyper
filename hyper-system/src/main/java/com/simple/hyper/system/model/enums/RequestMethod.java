@@ -11,9 +11,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RequestMethod implements ValueEnum<String> {
     GET("GET"),
-    POST( "POST"),
-    PUT( "PUT"),
-    DELETE("DELETE");
+    POST("POST"),
+    PUT("PUT"),
+    DELETE("DELETE"),
+    PATCH("PATCH");
 
     private final String type;
 

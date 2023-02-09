@@ -66,7 +66,7 @@ public class UploadServiceImpl implements IUploadService {
                     new ByteArrayInputStream(uploadFile.getBytes()));
             return urlPrefix + filePath;
         } catch (Exception e) {
-            throw new HyperException(MsgConsts.UPLOAD_IMG_ERROR_TEXT);
+            throw new HyperException(MsgConsts.UPLOAD_IMG_ERROR_MSG);
         }
     }
 
@@ -80,7 +80,7 @@ public class UploadServiceImpl implements IUploadService {
         if (Stream.of(IMAGE_TYPE)
                 .noneMatch(
                         type -> StringUtils.endWithIgnoreCase(file.getOriginalFilename(), type))) {
-            throw new HyperException(MsgConsts.UPLOAD_TYPE_ERROR_TEXT);
+            throw new HyperException(MsgConsts.UPLOAD_TYPE_ERROR_MSG);
         }
     }
 

@@ -2,6 +2,7 @@ package com.simple.hyper.system.config;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSClientBuilder;
+import com.simple.hyper.system.config.properties.OSSClientProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2022/12/27
  */
 @Data
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({OSSClientProperties.class})
 public class OSSClientConfig {
 

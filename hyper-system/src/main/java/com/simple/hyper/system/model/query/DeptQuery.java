@@ -32,5 +32,4 @@ public class DeptQuery extends PageQuery {
 
     private List<DeptDTO> children;
 
-    private List<Integer> ids;
 }

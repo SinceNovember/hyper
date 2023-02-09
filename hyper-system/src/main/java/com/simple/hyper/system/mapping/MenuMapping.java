@@ -34,6 +34,8 @@ public interface MenuMapping {
 
     MenuDTO toMenuDTO(MenuQuery menuQuery);
 
+    MenuDTO toMenuDTO(Menu menu);
+
     Menu toMenu(MenuDTO menuDTO);
 
 }

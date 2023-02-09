@@ -1,5 +1,6 @@
 package com.simple.hyper.common.base.query;
 
+import java.util.List;
 import lombok.Data;
 import lombok.ToString;
 
@@ -13,6 +14,11 @@ import lombok.ToString;
 @ToString
 @Data
 public class PageQuery {
+
+    /**
+     * 列表多选ID列表
+     */
+    private List<Integer> ids;
 
     /**
      * 页号

@@ -1,4 +1,4 @@
-package com.simple.hyper.system.config;
+package com.simple.hyper.system.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

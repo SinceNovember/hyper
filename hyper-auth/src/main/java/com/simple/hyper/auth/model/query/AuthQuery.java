@@ -17,5 +17,7 @@ public class AuthQuery {
 
     private String password;
 
+    private boolean rememberMe;
+
     private String tokenValue;
 }

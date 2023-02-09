@@ -3,6 +3,7 @@ package com.simple.hyper.common.utils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageSerializable;
 import com.simple.hyper.common.base.query.PageQuery;
+import java.util.Objects;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public final class PageHelperUtils {
 
     private static final String DEFAULT_ORDER_TYPE = "desc";
 
+    private static final String FONT_DEFAULT_ORDER_BY = "normal";
 
 
     /**
@@ -40,12 +42,14 @@ public final class PageHelperUtils {
             pageQuery.setPageNum(DEFAULT_PAGE_NUM);
             pageQuery.setPageSize(DEFAULT_PAGE_SIZE);
         }
-        if (StringUtils.isBlank(pageQuery.getOrderBy())) {
+        if (StringUtils.isBlank(pageQuery.getOrderBy())
+                || Objects.equals(pageQuery.getOrderType(), FONT_DEFAULT_ORDER_BY)) {
             pageQuery.setOrderBy(DEFAULT_ORDER_BY);
             pageQuery.setOrderType(DEFAULT_ORDER_TYPE);
         }
         PageHelper.startPage(pageQuery.getPageNum(), pageQuery.getPageSize(),
-                StringUtils.toUnderlineCase(pageQuery.getOrderBy()) + " " + pageQuery.getOrderType());
+                StringUtils.toUnderlineCase(pageQuery.getOrderBy()) + " "
+                        + pageQuery.getOrderType());
     }
 
     /**
@@ -55,7 +59,8 @@ public final class PageHelperUtils {
      * @param convertFunction 转换函数
      * @return
      */
-    public static <S, R> PageSerializable<R> convertPageDto2Vo(List<S> sources, Function<List<S>, List<R>> convertFunction) {
+    public static <S, R> PageSerializable<R> convertPageDto2Vo(List<S> sources,
+            Function<List<S>, List<R>> convertFunction) {
         Assert.notNull(sources, "sources cannot null");
         Assert.notNull(convertFunction, "convertFunction cannot null");
 

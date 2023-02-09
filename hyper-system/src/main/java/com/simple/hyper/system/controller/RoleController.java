@@ -34,6 +34,11 @@ public class RoleController {
         return Response.ok(roleService.getRoleById(id));
     }
 
+    @GetMapping("option")
+    public Response listOptionModel() {
+        return Response.ok(roleService.listRoleOptionModel());
+    }
+
     @GetMapping("tree")
     public Response listTreeModel() {
         return Response.ok(roleService.listRoleTreeModel());

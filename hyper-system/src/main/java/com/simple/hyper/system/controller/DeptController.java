@@ -3,7 +3,6 @@ package com.simple.hyper.system.controller;
 import com.simple.hyper.common.base.Response;
 import com.simple.hyper.system.model.query.DeptQuery;
 import com.simple.hyper.system.service.IDeptService;
-import com.simple.hyper.system.service.IUserService;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +26,6 @@ public class DeptController {
 
     @Resource
     private IDeptService deptService;
-
-    @Resource
-    private IUserService userService;
 
     @GetMapping("page")
     public Response pageDept(DeptQuery deptQuery) {

@@ -3,6 +3,7 @@ package com.simple.hyper.system.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageSerializable;
+import com.simple.hyper.common.base.OptionModel;
 import com.simple.hyper.common.base.TreeModel;
 import com.simple.hyper.common.utils.PageHelperUtils;
 import com.simple.hyper.system.mapper.RoleMapper;
@@ -38,6 +39,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             return new PageSerializable<>();
         }
         return PageHelperUtils.convertPageDto2Vo(roleDTOS, RoleMapping.INSTANCE::toRoleVOList);
+    }
+
+    @Override
+    public List<OptionModel> listRoleOptionModel() {
+        return baseMapper.selectRoleOptionModelList();
     }
 
     @Override

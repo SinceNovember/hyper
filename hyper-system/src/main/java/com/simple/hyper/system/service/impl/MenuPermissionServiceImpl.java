@@ -1,12 +1,17 @@
 package com.simple.hyper.system.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.simple.hyper.system.mapper.MenuPermissionMapper;
+import com.simple.hyper.system.model.dto.MenuDTO;
+import com.simple.hyper.system.model.dto.MenuPermissionDTO;
+import com.simple.hyper.system.model.dto.UserDTO;
 import com.simple.hyper.system.model.entity.MenuPermission;
 import com.simple.hyper.system.model.enums.PermissionType;
 import com.simple.hyper.system.model.query.MenuPermissionQuery;
 import com.simple.hyper.system.service.IMenuPermissionService;
+import com.simple.hyper.system.service.IRoleService;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class MenuPermissionServiceImpl extends
         ServiceImpl<MenuPermissionMapper, MenuPermission> implements IMenuPermissionService {
 
+    private final IRoleService roleService;
+
     @Override
     public Map<PermissionType, List<Integer>> listMenuPermissionIdGroupByType(
             MenuPermissionQuery query) {
@@ -35,6 +42,35 @@ public class MenuPermissionServiceImpl extends
         return menuPermissionList.stream()
                 .collect(Collectors.groupingBy(MenuPermission::getPermissionType,
                         Collectors.mapping(MenuPermission::getPermissionId, Collectors.toList())));
+    }
+
+    @Override
+    public boolean hasMenuPermission(UserDTO userDTO, MenuDTO menuDTO) {
+        if (menuDTO.getAlwaysShow()) {
+            return true;
+        }
+        //先判断该用户是否有权限
+        MenuPermissionDTO userMenuPermission = baseMapper.getMenuPermission(menuDTO.getId(),
+                userDTO.getId(),
+                PermissionType.USER);
+        if (userMenuPermission == null) {
+            //在判断用户部门是否有权限
+            MenuPermissionDTO deptMenuPermission = baseMapper.getMenuPermission(menuDTO.getId(),
+                    userDTO.getDeptId(), PermissionType.DEPT);
+            if (deptMenuPermission == null) {
+                if (CollectionUtils.isEmpty(userDTO.getRoleIds())) {
+                    return false;
+                }
+                //判断用户拥有的角色是否包含此菜单权限
+                if (count(Wrappers.<MenuPermission>lambdaQuery()
+                        .eq(MenuPermission::getMenuId, menuDTO.getId())
+                        .eq(MenuPermission::getPermissionType, PermissionType.ROLE)
+                        .in(MenuPermission::getPermissionId, userDTO.getRoleIds())) <= 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override

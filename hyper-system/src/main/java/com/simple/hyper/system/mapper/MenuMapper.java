@@ -55,6 +55,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
             "<if test=\"pid != null and pid != ''  \">" +
             " and pid = #{pid}" +
             "</if>" +
+            "order by order_num desc" +
             "</script>")
     @Results(id = "MenuTreeModelResultMap", value = {
             @Result(column = "value", property = "value"),

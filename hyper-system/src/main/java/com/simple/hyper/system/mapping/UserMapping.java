@@ -3,11 +3,12 @@ package com.simple.hyper.system.mapping;
 import com.simple.hyper.system.model.dto.UserDTO;
 import com.simple.hyper.system.model.entity.User;
 import com.simple.hyper.system.model.query.UserQuery;
+import com.simple.hyper.system.model.vo.UserDetailVO;
 import com.simple.hyper.system.model.vo.UserVO;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-
 import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.Named;
+import org.mapstruct.factory.Mappers;
 
 /**
  * .
@@ -24,7 +25,11 @@ public interface UserMapping {
 
     UserVO toUserVO(UserDTO userDTO);
 
-    UserVO toUserVO(User user);
+    @Named(value = "toUserDetailVO")
+    UserDetailVO toUserDetailVO(UserDTO userDTO);
+
+
+    UserDTO toUserDTO(User user);
 
     UserDTO toUserDTO(UserQuery userQuery);
 

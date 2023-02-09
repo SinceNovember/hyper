@@ -21,7 +21,8 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
     @Select("<script>" +
-            "select * from t_user where deleted = 0 " +
+            "select a.*, b.dept_name from t_user a left join t_dept b on a.dept_id = b.id and b.deleted = 0" +
+            " where a.deleted = 0 " +
             "<if test=\"nickname != null and nickname != ''\">" +
             "and nickname like concat('%', #{nickname}, '%') " +
             "</if>" +

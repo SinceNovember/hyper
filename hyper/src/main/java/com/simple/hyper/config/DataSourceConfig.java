@@ -26,7 +26,7 @@ import javax.sql.DataSource;
  * @author SinceNovember
  * @date 2022/11/19
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @MapperScan(basePackages = "com.simple.hyper.*.mapper", sqlSessionTemplateRef = Consts.PRIMARY_SQL_SESSION_TEMPLATE)
 public class DataSourceConfig {
 

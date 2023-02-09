@@ -1,12 +1,12 @@
 package com.simple.hyper.system.model.dto;
 
 import com.simple.hyper.common.base.dto.BaseDTO;
-import com.simple.hyper.system.model.enums.UserSex;
 import com.simple.hyper.system.model.enums.StatusType;
+import com.simple.hyper.system.model.enums.UserSex;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Data;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
 
 /**
  * 用户dto
@@ -37,6 +37,12 @@ public class UserDTO extends BaseDTO {
     private String description;
 
     private Integer deptId;
+
+    private String deptName;
+
+    private List<Integer> roleIds;
+
+    private List<String> roleNames;
 
     private StatusType status;
 

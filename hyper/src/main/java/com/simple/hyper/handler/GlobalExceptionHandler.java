@@ -1,10 +1,13 @@
 package com.simple.hyper.handler;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.SaTokenException;
 import com.simple.hyper.common.base.Response;
 import com.simple.hyper.common.consts.MsgConsts;
 import com.simple.hyper.common.ex.HyperException;
 import com.simple.hyper.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,7 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.ServletException;
 
 /**
- * .
+ * 全局异常处理
  *
  * @author SinceNovember
  * @date 2022/12/13
@@ -32,10 +35,11 @@ public class GlobalExceptionHandler {
         if (e instanceof ServletException) {
             throw e;
         } else if (e instanceof HttpMessageNotReadableException) {
+            log.error("error: ", e);
             return Response.fail(MsgConsts.PARAMS_ERROR_CODE, MsgConsts.PARAMS_ERROR_MSG);
         } else {
             // 打印堆栈信息
-            log.error("system error:", e);
+            log.error("system error: ", e);
             return Response.fail(MsgConsts.SYSTEM_ERROR_CODE, MsgConsts.SYSTEM_ERROR_MSG);
         }
     }
@@ -48,15 +52,17 @@ public class GlobalExceptionHandler {
         try {
             String errorMsg;
             if (e instanceof MethodArgumentNotValidException) {
-                errorMsg = ((MethodArgumentNotValidException) e).getBindingResult().getFieldError().getDefaultMessage();
+                errorMsg = ((MethodArgumentNotValidException) e).getBindingResult().getFieldError()
+                        .getDefaultMessage();
             } else {
-                errorMsg = ((BindException) e).getBindingResult().getFieldError().getDefaultMessage();
+                errorMsg = ((BindException) e).getBindingResult().getFieldError()
+                        .getDefaultMessage();
             }
 
-            log.error("参数异常:{}", errorMsg);
+            log.error("参数异常: {}", errorMsg);
             return Response.fail(MsgConsts.PARAMS_ERROR_CODE, errorMsg);
         } catch (Exception ex) {
-            log.error("system error:", e);
+            log.error("system error: ", e);
             return Response.fail(MsgConsts.PARAMS_ERROR_CODE, MsgConsts.SYSTEM_ERROR_MSG);
         }
     }
@@ -67,14 +73,37 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HyperException.class)
     public Response handleHyperException(HyperException e) {
         if (e.getCode() != null) {
-            log.info("业务异常,code:{},message:{}", e.getCode(), e.getMessage());
+            log.info("业务异常, code: {}, message: {}", e.getCode(), e.getMessage());
             return Response.fail(e.getCode(), e.getMessage());
         }
         if (StringUtils.isNotBlank(e.getMessage())) {
-            log.info("业务异常:{}", e.getMessage());
+            log.info("业务异常: {}", e.getMessage());
             return Response.fail(e.getMessage());
         } else {
-            log.error("system error:", e);
+            log.error("system error: ", e);
+            return Response.fail(MsgConsts.SYSTEM_ERROR_MSG);
+        }
+    }
+
+    @ExceptionHandler(NotLoginException.class)
+    public Response notLoginException(NotLoginException e) {
+        if (StringUtils.isNotBlank(e.getMessage())) {
+            log.info("token异常, code: {}, message: {}", e.getCode(), e.getMessage());
+            return Response.fail(HttpStatus.UNAUTHORIZED,
+                    StringUtils.subBefore(e.getMessage(), "：", true));
+        } else {
+            log.error("system error: ", e);
+            return Response.fail(MsgConsts.SYSTEM_ERROR_MSG);
+        }
+    }
+
+    @ExceptionHandler(SaTokenException.class)
+    public Response saTokenException(SaTokenException e) {
+        if (StringUtils.isNotBlank(e.getMessage())) {
+            log.info("鉴权异常, code: {}, message: {}", e.getCode(), e.getMessage());
+            return Response.fail(e.getMessage());
+        } else {
+            log.error("system error: ", e);
             return Response.fail(MsgConsts.SYSTEM_ERROR_MSG);
         }
     }

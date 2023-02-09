@@ -9,11 +9,11 @@ import lombok.Data;
  * @date 2022/12/13
  */
 @Data
-public class HyperException extends RuntimeException{
+public class HyperException extends RuntimeException {
 
-    private Integer code;
+    private Integer code ;
 
-    public HyperException(){
+    public HyperException() {
         super();
     }
 

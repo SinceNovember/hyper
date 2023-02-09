@@ -7,6 +7,9 @@ import com.simple.hyper.auth.model.query.AuthQuery;
 import com.simple.hyper.auth.service.IAuthService;
 import com.simple.hyper.common.consts.MsgConsts;
 import com.simple.hyper.common.ex.HyperException;
+import com.simple.hyper.system.model.enums.StatusType;
+import com.simple.hyper.system.model.vo.UserVO;
+import com.simple.hyper.system.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +25,23 @@ public class AuthServiceImpl implements IAuthService {
 
     private final AuthMapper authMapper;
 
+    private final IUserService userService;
+
+    @Override
+    public UserVO getLoginUserInfo() {
+        return userService.getUserById(StpUtil.getLoginIdAsInt());
+    }
+
     @Override
     public SaTokenInfo login(AuthQuery query) {
-        Integer userId = authMapper.selectUserIdByUsernameAndPassword(query);
-        if (userId == null) {
+        UserVO userVO = authMapper.selectUserIdByUsernameAndPassword(query);
+        if (userVO == null) {
             throw new HyperException(MsgConsts.LOGIN_ERROR_MSG);
         }
-        StpUtil.login(userId);
+        if (userVO.getStatus() == StatusType.LOCK) {
+            throw new HyperException(MsgConsts.USER_LOCK_MSG);
+        }
+        StpUtil.login(userVO.getId(), query.isRememberMe());
         return StpUtil.getTokenInfo();
     }
 

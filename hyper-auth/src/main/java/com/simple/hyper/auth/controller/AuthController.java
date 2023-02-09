@@ -4,6 +4,7 @@ import com.simple.hyper.auth.model.query.AuthQuery;
 import com.simple.hyper.auth.service.IAuthService;
 import com.simple.hyper.common.base.Response;
 import javax.annotation.Resource;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +23,16 @@ public class AuthController {
     @Resource
     private IAuthService authService;
 
+    @GetMapping("userInfo")
+    public Response getUserInfo() {
+        return Response.ok(authService.getLoginUserInfo());
+    }
+
     @PostMapping("login")
     public Response login(@RequestBody AuthQuery query) {
         return Response.ok(authService.login(query));
     }
+
 
     @PostMapping("logout")
     public Response logout(@RequestBody AuthQuery query) {

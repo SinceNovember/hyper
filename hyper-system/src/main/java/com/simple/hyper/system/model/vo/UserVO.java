@@ -1,12 +1,11 @@
 package com.simple.hyper.system.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.simple.hyper.system.model.enums.UserSex;
 import com.simple.hyper.system.model.enums.StatusType;
+import com.simple.hyper.system.model.enums.UserSex;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
 
 /**
  * .
@@ -22,8 +21,6 @@ public class UserVO {
 
     private String username;
 
-    private String password;
-
     private UserSex sex;
 
     private String email;
@@ -33,8 +30,6 @@ public class UserVO {
     private String nickname;
 
     private String avatar;
-
-    private String description;
 
     private Integer deptId;
 

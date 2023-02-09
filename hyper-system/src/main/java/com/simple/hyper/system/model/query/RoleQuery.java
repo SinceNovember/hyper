@@ -4,8 +4,6 @@ import com.simple.hyper.common.base.query.PageQuery;
 import com.simple.hyper.system.model.enums.StatusType;
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * .
  *
@@ -26,7 +24,5 @@ public class RoleQuery extends PageQuery {
     private StatusType status;
 
     private String description;
-
-    private List<Integer> ids;
 
 }
